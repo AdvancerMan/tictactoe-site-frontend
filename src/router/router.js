@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HelloWorld from "@/components/HelloWorld";
+import Index from "@/components/Index";
 import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
@@ -11,6 +12,11 @@ const routes = [
     {
         path: '/',
         name: 'index',
+        component: Index
+    },
+    {
+        path: '/hello',
+        name: 'hello',
         component: HelloWorld
     },
     {

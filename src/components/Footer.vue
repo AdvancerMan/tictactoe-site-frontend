@@ -13,6 +13,6 @@ export default {
 
 <style scoped>
     footer {
-        margin: 1rem auto 0 auto;
+        margin-top: 3rem;
     }
 </style>
