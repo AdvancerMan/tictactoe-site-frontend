@@ -1,13 +1,7 @@
 <template>
-    <div>
-        <div>
-            Not found :(
-        </div>
-        <div>
-            Try
-            <router-link :to="{name: 'index'}">this</router-link>
-        </div>
-    </div>
+    <h1>
+        Error 404. Not found :(
+    </h1>
 </template>
 
 <script>
