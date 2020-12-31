@@ -23,6 +23,7 @@ export default {
             navLinks: [
                 ['index', 'Home'],
                 ['hello', 'Vue Greeting'],
+                ['ticTacToe-lobby', 'Tic Tac Toe'],
             ]
         }
     }
@@ -47,7 +48,7 @@ header .title {
 
 header nav {
     width: auto;
-    background-color: var(--header-color);
+    background-color: var(--main-yellow);
     padding: 1.2rem 0;
 }
 

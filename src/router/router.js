@@ -5,6 +5,7 @@ import Index from "@/components/Index";
 import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
+import TicTacToeGame from "@/components/ticTacToe/Game";
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,25 @@ const routes = [
         path: '/hello',
         name: 'hello',
         component: HelloWorld
+    },
+    {
+        path: '/ticTacToe',
+        redirect: {name: 'ticTacToe-lobby'}
+    },
+    {
+        path: '/ticTacToe/lobby',
+        name: 'ticTacToe-lobby',
+        component: TicTacToeGame
+    },
+    {
+        path: '/ticTacToe/create',
+        name: 'ticTacToe-create',
+        component: TicTacToeGame
+    },
+    {
+        path: '/ticTacToe/play/:id',
+        name: 'ticTacToe-play',
+        component: TicTacToeGame
     },
     {
         path: '*',

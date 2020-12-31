@@ -1,7 +1,11 @@
 :root {
-    --header-color: #ec2d01;
-    --header-link-color: #fcdd76;
-    --header-onlink-color: #ffe614;
+    --main-yellow: #F7D002;
+    --header-link-color: #101010;
+    --header-onlink-color: #404040;
+
+    --tic-tac-toe-cell-size: 64px;
+    --tic-tac-toe-table-border: 6px groove var(--main-yellow);
+    --tic-tac-toe-cell-border: 2px solid var(--main-yellow);
 
     font-family: "Roboto", "Lucida Grande", "DejaVu Sans",
     "Bitstream Vera Sans", Verdana, Arial, sans-serif;
