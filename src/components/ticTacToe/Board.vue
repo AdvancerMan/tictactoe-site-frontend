@@ -3,11 +3,9 @@
         <tbody>
         <tr v-for="i in board.length" :key="i">
             <td v-for="j in board[i - 1].length" :key="j"
-                @click="makeTurn(i - 1, j - 1)">
-                <img src="@/assets/img/cross.png" alt="cross"
-                     v-if="board[i - 1][j - 1] === CROSS">
-                <img src="@/assets/img/circle.png" alt="circle"
-                     v-else-if="board[i - 1][j - 1] === CIRCLE">
+                @click="$emit('makeTurn', i - 1, j - 1)">
+                <div :style="styles[board[i - 1][j - 1]]"
+                     v-if="board[i - 1][j - 1] !== -1"/>
                 <div v-else/>
             </td>
         </tr>
@@ -16,19 +14,12 @@
 </template>
 
 <script>
-import {CROSS, CIRCLE, NOTHING} from '@/components/ticTacToe/constants';
-
 export default {
     name: "Board",
-    props: ['board'],
-    data: function () {
-        return {
-            CROSS, CIRCLE, NOTHING
-        };
-    },
-    methods: {
-        makeTurn(i, j) {
-            this.$root.$emit('ticTacToe-makeTurn', i, j);
+    props: ['board', 'colors'],
+    computed: {
+        styles() {
+            return this.colors.map(color => 'background-color: ' + color);
         }
     }
 }
@@ -47,9 +38,5 @@ table tr td {
 table tr td *:first-child {
     width: var(--tic-tac-toe-cell-size);
     height: var(--tic-tac-toe-cell-size);
-}
-
-table tr td img {
-    vertical-align: top;
 }
 </style>

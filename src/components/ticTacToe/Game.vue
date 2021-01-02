@@ -1,42 +1,88 @@
 <template>
-    <div>
-        <Board :board="board" style="margin: 0 auto"/>
+    <div class="game-root">
+        <div class="players">
+            Players:
+            <ul>
+                <li v-for="(player, i) in game.players" :key="player.id">
+                    <span class="marker" :style="playerMarkerStyle[player.id]">
+                        {{ i % 2 ? 'O' : 'X' }}
+                    </span>
+                    <span class="username">
+                        {{ player.username }}
+                    </span>
+                    <span class="turn-marker" v-if="i === turnIndex"
+                          :style="playerMarkerStyle[player.id]">
+                        ✔
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <Board class='board' v-on:makeTurn="makeTurn"
+               :board="board" :colors="game.colors"/>
     </div>
 </template>
 
 <script>
 import Board from "@/components/ticTacToe/Board";
-import {CROSS, CIRCLE, NOTHING} from '@/components/ticTacToe/constants';
 
 export default {
     name: "Game",
-    data: function () {
-        return {
-            width: 10,
-            height: 10,
-            board: [],
-            turn: CROSS,
-            CROSS, CIRCLE, NOTHING
-        }
-    },
-    created() {
-        for (let i = 0; i < this.height; i++) {
-            this.board.push([]);
-            for (let j = 0; j < this.width; j++) {
-                this.board[i].push(NOTHING);
-            }
-        }
-    },
     components: {Board},
-    beforeCreate() {
-        this.$root.$on('ticTacToe-makeTurn', (i, j) => {
-            this.$set(this.board[i], j, this.turn);
-            this.turn = this.turn === CROSS ? CIRCLE : CROSS;
-        })
-    }
+    props: ['game', 'board', 'turnIndex'],
+    computed: {
+        playerMarkerStyle() {
+            let colorEntries = [];
+            if (this.game.started) {
+                colorEntries = this.game.colors.map((c, i) => [this.game.order[i], c]);
+            } else {
+                colorEntries = Object.entries(this.game.colors);
+            }
+
+            return Object.fromEntries(colorEntries.map(([id, color]) => [id, `color: ${color};`]));
+        }
+    },
+    methods: {
+        makeTurn(i, j) {
+            this.$emit('makeTurn', i, j);
+        }
+    },
 }
 </script>
 
 <style scoped>
+.game-root {
+    display: flex;
+    flex-direction: row;
+    margin-left: 2rem;
+}
 
+.game-root .players ul {
+    list-style-type: none;
+    text-align: left;
+}
+
+.game-root .players ul li {
+    position: relative;
+}
+
+.game-root .players ul li .marker {
+    position: absolute;
+}
+
+.game-root .players ul li .username {
+    margin-left: 1.5rem;
+}
+
+.game-root .players ul li .turn-marker {
+    position: absolute;
+    right: -1rem;
+}
+
+.game-root .players ul li:before {
+    padding-right: 5px;
+}
+
+.game-root .board {
+    margin-left: 5rem;
+}
 </style>
