@@ -1,7 +1,7 @@
 <template>
     <footer>
         <hr>
-        Created by Kazakov Mihail, 2020
+        Created by Kazakov Mihail, 2021
     </footer>
 </template>
 
