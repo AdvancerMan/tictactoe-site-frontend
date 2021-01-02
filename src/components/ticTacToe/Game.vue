@@ -19,6 +19,7 @@
         </div>
         <Board class='board' v-on:makeTurn="makeTurn"
                :board="board" :colors="game.colors"/>
+        <div>{{ turnErrors }}</div>
     </div>
 </template>
 
@@ -28,7 +29,7 @@ import Board from "@/components/ticTacToe/Board";
 export default {
     name: "Game",
     components: {Board},
-    props: ['game', 'board', 'turnIndex'],
+    props: ['game', 'board', 'turnIndex', 'turnErrors'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];

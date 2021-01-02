@@ -6,6 +6,7 @@ import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
 import TicTacToeGameHistory from "@/components/ticTacToe/History";
+import TicTacToePlay from "@/components/ticTacToe/Play";
 import Login from "@/components/credentials/Login";
 import Register from "@/components/credentials/Register";
 
@@ -32,10 +33,10 @@ const routes = [
         name: 'hello',
         component: HelloWorld
     },
-    {
-        path: '/ticTacToe',
-        redirect: {name: 'ticTacToe-lobby'}
-    },
+    // { TODO
+    //     path: '/ticTacToe',
+    //     redirect: {name: 'ticTacToe-lobby'}
+    // },
     // { TODO
     //     path: '/ticTacToe/lobby',
     //     name: 'ticTacToe-lobby',
@@ -51,12 +52,12 @@ const routes = [
     //     name: 'ticTacToe-room',
     //     component:
     // },
-    // { TODO
-    //     path: '/ticTacToe/game/:id/play',
-    //     name: 'ticTacToe-play',
-    //     component: ,
-    //     props: true,
-    // },
+    {
+        path: '/ticTacToe/game/:id/play',
+        name: 'ticTacToe-play',
+        component: TicTacToePlay,
+        props: true,
+    },
     {
         path: '/ticTacToe/game/:id/history',
         name: 'ticTacToe-history',
