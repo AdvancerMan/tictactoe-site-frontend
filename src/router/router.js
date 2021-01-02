@@ -6,6 +6,8 @@ import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
 import TicTacToeGameHistory from "@/components/ticTacToe/History";
+import Login from "@/components/credentials/Login";
+import Register from "@/components/credentials/Register";
 
 Vue.use(VueRouter);
 
@@ -14,6 +16,16 @@ const routes = [
         path: '/',
         name: 'index',
         component: Index
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: Login
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: Register
     },
     {
         path: '/hello',

@@ -12,12 +12,27 @@
                 </li>
             </ul>
         </nav>
+        <div class="login-register" v-if="user === undefined">
+            <router-link :to="{name: 'register'}">
+                Register
+            </router-link>
+            <router-link :to="{name: 'login'}">
+                Login
+            </router-link>
+        </div>
+        <div class="login-register" v-else>
+            <span>Hello, {{ user.username }}!</span>
+            <a href='' @click.prevent="$root.$emit('logout')">
+                Logout
+            </a>
+        </div>
     </header>
 </template>
 
 <script>
 export default {
     name: "Header",
+    props: ["user"],
     data() {
         return {
             navLinks: [
@@ -61,15 +76,30 @@ header nav ul li {
     margin-right: 1rem;
 }
 
-header nav ul li a {
-    padding: 1.2rem 0;
+header .login-register {
+    position: absolute;
+    right: 3rem;
+    top: 1.2rem;
+}
+
+header .login-register *:nth-child(1) {
+    margin-right: 1rem;
+}
+
+header nav ul li a,
+header .login-register * {
     text-decoration: none;
     font-weight: bold;
     color: var(--header-link-color);
 }
 
 header nav ul li a:hover,
-header .title:hover {
+header .title:hover,
+header .login-register *:hover {
     color: var(--header-onlink-color);
+}
+
+header .login-register span:hover {
+    color: inherit;
 }
 </style>
