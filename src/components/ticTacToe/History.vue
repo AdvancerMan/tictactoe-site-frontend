@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Game from "@/components/ticTacToe/Game";
 
 export default {
@@ -40,7 +39,7 @@ export default {
         },
     },
     beforeMount() {
-        axios.get("/api/v1/ticTacToe/game/" + this.id).then(response => {
+        this.$root.$emit("axiosGet", `/api/v1/ticTacToe/game/${this.id}`, {}, response => {
             this.game = response.data;
             this.fillBoard();
         });

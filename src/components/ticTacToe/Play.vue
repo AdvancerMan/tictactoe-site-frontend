@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Game from "@/components/ticTacToe/Game";
 
 export default {
@@ -19,7 +18,12 @@ export default {
             turnIndex: 0,
             board: [],
             turnErrors: '',
-            fetchingHistory: true,
+            destroyed: false,
+        }
+    },
+    computed: {
+        fetchingHistory() {
+            return !this.destroyed || !this.finished;
         }
     },
     methods: {
@@ -39,22 +43,22 @@ export default {
         },
         makeTurn(i, j) {
             this.$root.$emit(
-                'patchWithJwt', `/api/v1/ticTacToe/game/${this.id}/turn`, {i, j},
+                'axiosPatch', `/api/v1/ticTacToe/game/${this.id}/turn`, {i, j}, {},
                 response => {
                     this.$set(this.board[i], j, this.turnIndex);
-                    if (response.data.winner_index !== null) {
-                        this.game.finished = true;
-                        alert(`winner_index = ${response.data.winner_index}`);
+                    if (response.data.win_line_start[0] !== null) {
+                        this.game.win_data = response.data;
+                        alert(`win_data = ${response.data}`);
                     }
                 },
-                errors => {
-                    this.turnErrors = errors.response.data;
+                error => {
+                    this.turnErrors = error;
                 }
             );
         },
         fetchHistory() {
             this.$root.$emit(
-                'getWithJwt', `/api/v1/ticTacToe/game/${this.id}/historySuffix`, {
+                'axiosGet', `/api/v1/ticTacToe/game/${this.id}/historySuffix`, {
                     params: {
                         start_index: this.game.history.length
                     }
@@ -68,20 +72,22 @@ export default {
                     })
 
                     this.turnIndex = this.game.history.length % this.game.players.length;
-                }, error => this.turnErrors = error.response.data
-            )
+                }, error => {
+                    this.turnErrors = error;
+                }
+            );
         },
         fetchHistoryContinuously() {
             setTimeout(() => {
-                this.fetchHistory();
                 if (this.fetchingHistory) {
+                    this.fetchHistory();
                     this.fetchHistoryContinuously();
                 }
             }, 1000);
         }
     },
     beforeMount() {
-        axios.get("/api/v1/ticTacToe/game/" + this.id).then(response => {
+        this.$root.$emit('axiosGet', `/api/v1/ticTacToe/game/${this.id}`, {}, response => {
             this.game = response.data;
             this.fillBoard();
         });
@@ -90,7 +96,7 @@ export default {
         this.fetchHistoryContinuously();
     },
     beforeDestroy() {
-        this.fetchingHistory = false;
+        this.destroyed = true;
     }
 }
 </script>

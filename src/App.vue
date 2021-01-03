@@ -22,14 +22,20 @@ export default {
     methods: {
         requestWithJwt(axiosRequest, config, then, catchError, withoutRedirect, _again) {
             axiosRequest(config).then(response => {
-                then(response);
+                if (then !== undefined) {
+                    then(response);
+                }
             }).catch(error => {
-                if (error.response.data.code === "token_not_valid" && !_again) {
-                    this.refreshJwt(axiosRequest, config, then, catchError, withoutRedirect);
-                } else {
-                    if (catchError !== undefined) {
-                        catchError(error);
+                if (error.response) {
+                    if (error.response.data.code === "token_not_valid" && !_again) {
+                        this.refreshJwt(axiosRequest, config, then, catchError, withoutRedirect);
+                    } else if (catchError !== undefined) {
+                        catchError(error.response.data);
                     }
+                } else if (error.request) {
+                    console.log('Made request but got no response:', error.request);
+                } else {
+                    console.log('Error', error.message);
                 }
             });
         },
@@ -76,14 +82,14 @@ export default {
         });
 
         this.$root.$on("login", (username, password) => {
-            axios.post('/api/v1/token/', {username, password}).then(response => {
+            this.$root.$emit('axiosPost', '/api/v1/token/', {username, password}, {}, response => {
                 localStorage.setItem('jwtAccess', response.data.access);
                 localStorage.setItem('jwtRefresh', response.data.refresh);
                 this.$root.$emit("getUser");
                 this.$router.push({name: 'index'});
-            }).catch(error => {
-                this.$root.$emit('loginValidationError', error.response.data);
-            })
+            }, error => {
+                this.$root.$emit('loginValidationError', error);
+            }, true);
         });
 
         this.$root.$on("clearJwt", () => {
@@ -99,14 +105,14 @@ export default {
 
         this.$root.$on("getUser", () => {
             this.$root.$emit(
-                'getWithJwt', '/api/v1/token/user/', {},
+                'axiosGet', '/api/v1/token/user/', {},
                 response => {
                     this.user = response.data;
-                }, error => alert(JSON.stringify(error.response.data)), true
+                }, error => alert(JSON.stringify(error)), true
             );
         });
 
-        this.$root.$on("postWithJwt", (url, data, config, then, catchError, withoutRedirect) => {
+        this.$root.$on("axiosPost", (url, data, config, then, catchError, withoutRedirect) => {
             const [_url, _data, _config] = this.prepareRequest(url, data, config);
             this.requestWithJwt(
                 (config) => axios.post(_url, _data, config),
@@ -114,7 +120,7 @@ export default {
             );
         });
 
-        this.$root.$on("patchWithJwt", (url, data, config, then, catchError, withoutRedirect) => {
+        this.$root.$on("axiosPatch", (url, data, config, then, catchError, withoutRedirect) => {
             const [_url, _data, _config] = this.prepareRequest(url, data, config);
             this.requestWithJwt(
                 (config) => axios.patch(_url, _data, config),
@@ -122,7 +128,7 @@ export default {
             );
         });
 
-        this.$root.$on("getWithJwt", (url, config, then, catchError, withoutRedirect) => {
+        this.$root.$on("axiosGet", (url, config, then, catchError, withoutRedirect) => {
             // eslint-disable-next-line no-unused-vars
             const [_url, _, _config] = this.prepareRequest(url, undefined, config);
             this.requestWithJwt(
