@@ -47,9 +47,9 @@ export default {
         makeTurn(i, j) {
             axiosPatch(`/api/v1/ticTacToe/game/${this.id}/turn`, {i, j}).then(response => {
                 this.$set(this.board[i], j, this.turnIndex);
-                if (response.data.win_line_start[0] !== null) {
+                if (response.data.start[0] !== null) {
                     this.game.win_data = response.data;
-                    alert(`win_data = ${JSON.stringify(response.data)}`);
+                    this.$root.$emit('ticTacToe-finishGame');
                 }
             }).catch(error => {
                 this.turnErrors = error.data;

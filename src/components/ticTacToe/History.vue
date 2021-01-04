@@ -22,6 +22,24 @@ export default {
         }
     },
     methods: {
+        colorCell(index) {
+            const players_cnt = this.game.players.length;
+            if (index >= this.game.history.length) {
+                if (this.game.win_data.start[0] !== null) {
+                    this.$root.$emit('ticTacToe-finishGame');
+                }
+                return;
+            }
+
+            const turn = this.game.history[index];
+            this.$set(this.board[turn[0]], turn[1], index % players_cnt);
+
+            if (index + 1 < this.game.history.length) {
+                this.turnIndex = (index + 1) % players_cnt;
+            }
+
+            setTimeout(() => this.colorCell(index + 1), 500);
+        },
         fillBoard() {
             for (let i = 0; i < this.game.height; i++) {
                 this.board.push([]);
@@ -30,15 +48,7 @@ export default {
                 }
             }
 
-            setTimeout(() => {
-                for (let i = 0; i < this.game.history.length; i++) {
-                    const turn = this.game.history[i];
-                    setTimeout(() => {
-                        this.$set(this.board[turn[0]], turn[1], i % this.game.players.length);
-                        this.turnIndex = (i + 1) % this.game.players.length;
-                    }, 500 * i);
-                }
-            }, 1000);
+            setTimeout(() => this.colorCell(0), 1000);
         },
     },
     beforeMount() {

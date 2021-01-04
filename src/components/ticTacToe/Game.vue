@@ -51,6 +51,19 @@ export default {
             this.$emit('makeTurn', i, j);
         }
     },
+    beforeCreate() {
+        this.$root.$on('ticTacToe-finishGame', () => {
+            if (this.game.win_data.start[0] === -1) {
+                alert(`It's a tie!`);
+            } else {
+                const players_cnt = this.game.players.length;
+                const winnerIndex = (this.game.history.length) % players_cnt;
+                const winner = this.game.players[winnerIndex].username;
+                const win_data = JSON.stringify(this.game.win_data);
+                alert(`${winner} won! win_data = ${win_data}`);
+            }
+        });
+    }
 }
 </script>
 
