@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HelloWorld from "@/components/HelloWorld";
 import Index from "@/components/Index";
 import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
@@ -28,11 +27,6 @@ const routes = [
         path: '/register',
         name: 'register',
         component: Register
-    },
-    {
-        path: '/hello',
-        name: 'hello',
-        component: HelloWorld
     },
     // { TODO
     //     path: '/ticTacToe',

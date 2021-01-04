@@ -37,7 +37,6 @@ export default {
         return {
             navLinks: [
                 ['index', 'Home'],
-                ['hello', 'Vue Greeting'],
                 ['ticTacToe-lobby', 'Tic Tac Toe'],
             ]
         }
