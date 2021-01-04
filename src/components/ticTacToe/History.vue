@@ -1,6 +1,7 @@
 <template>
     <div>
-        <Game :game="game" :board="board" :turnIndex="turnIndex"/>
+        <Game :game="game" :board="board" :turnIndex="turnIndex"
+        :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
 
@@ -16,7 +17,8 @@ export default {
         return {
             game: {},
             turnIndex: 0,
-            board: []
+            board: [],
+            fetchingGame: true,
         }
     },
     methods: {
@@ -43,7 +45,9 @@ export default {
         axiosGet(`/api/v1/ticTacToe/game/${this.id}`).then(response => {
             this.game = response.data;
             this.fillBoard();
-        });
+        }).catch(() => {
+            // no operations
+        }).then(() => this.fetchingGame = false);
     }
 }
 </script>

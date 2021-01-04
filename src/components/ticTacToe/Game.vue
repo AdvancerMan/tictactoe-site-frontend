@@ -1,35 +1,39 @@
 <template>
-    <div class="game-root">
-        <div class="players">
-            Players:
-            <ul>
-                <li v-for="(player, i) in game.players" :key="player.id">
+    <div>
+        <NotFound404 v-if="notFound"/>
+        <div v-else class="game-root">
+            <div class="players">
+                Players:
+                <ul>
+                    <li v-for="(player, i) in game.players" :key="player.id">
                     <span class="marker" :style="playerMarkerStyle[player.id]">
                         {{ i % 2 ? 'O' : 'X' }}
                     </span>
-                    <span class="username">
+                        <span class="username">
                         {{ player.username }}
                     </span>
-                    <span class="turn-marker" v-if="i === turnIndex"
-                          :style="playerMarkerStyle[player.id]">
+                        <span class="turn-marker" v-if="i === turnIndex"
+                              :style="playerMarkerStyle[player.id]">
                         ✔
                     </span>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
+            <Board class='board' v-on:makeTurn="makeTurn"
+                   :board="board" :colors="game.colors"/>
+            <div>{{ turnErrors }}</div>
         </div>
-        <Board class='board' v-on:makeTurn="makeTurn"
-               :board="board" :colors="game.colors"/>
-        <div>{{ turnErrors }}</div>
     </div>
 </template>
 
 <script>
 import Board from "@/components/ticTacToe/Board";
+import NotFound404 from "@/components/NotFound404";
 
 export default {
     name: "Game",
-    components: {Board},
-    props: ['game', 'board', 'turnIndex', 'turnErrors'],
+    components: {NotFound404, Board},
+    props: ['game', 'board', 'turnIndex', 'turnErrors', 'notFound'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];

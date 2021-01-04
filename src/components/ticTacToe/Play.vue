@@ -1,7 +1,8 @@
 <template>
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
-              :turnErrors="turnErrors" v-on:makeTurn="makeTurn"/>
+              :turnErrors="turnErrors" v-on:makeTurn="makeTurn"
+              :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
 
@@ -20,6 +21,7 @@ export default {
             board: [],
             turnErrors: '',
             destroyed: false,
+            fetchingGame: true,
         }
     },
     computed: {
@@ -86,7 +88,9 @@ export default {
             this.game = response.data;
             this.fillBoard();
             this.fetchHistoryContinuously();
-        });
+        }).catch(() => {
+            // no operations
+        }).then(() => this.fetchingGame = false);
     },
     beforeDestroy() {
         this.destroyed = true;
