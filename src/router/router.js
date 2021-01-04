@@ -9,6 +9,7 @@ import TicTacToeGameHistory from "@/components/ticTacToe/History";
 import TicTacToePlay from "@/components/ticTacToe/Play";
 import Login from "@/components/credentials/Login";
 import Register from "@/components/credentials/Register";
+import {isAuthenticated} from "@/requests";
 
 Vue.use(VueRouter);
 
@@ -57,6 +58,9 @@ const routes = [
         name: 'ticTacToe-play',
         component: TicTacToePlay,
         props: true,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/ticTacToe/game/:id/history',
@@ -81,6 +85,20 @@ router.beforeResolve((to, from, next) => {
         NProgress.start();
     }
     next()
+});
+
+router.beforeEach(function (to, from, next) {
+    if (to.meta.requiresAuth) {
+        if (isAuthenticated()) {
+            next();
+        } else {
+            // TODO friendly alert that page requires login
+            alert("Login required");
+            next({name: 'login'});
+        }
+    } else {
+        next();
+    }
 });
 
 router.afterEach(() => {

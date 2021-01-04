@@ -9,7 +9,7 @@
 <script>
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import axios from "axios";
+import {axiosPost, axiosGet, isAuthenticated} from "@/requests";
 
 export default {
     name: 'App',
@@ -17,59 +17,6 @@ export default {
     data() {
         return {
             user: undefined,
-        }
-    },
-    methods: {
-        requestWithJwt(axiosRequest, config, then, catchError, withoutRedirect, _again) {
-            axiosRequest(config).then(response => {
-                if (then !== undefined) {
-                    then(response);
-                }
-            }).catch(error => {
-                if (error.response) {
-                    if (error.response.data.code === "token_not_valid" && !_again) {
-                        this.refreshJwt(axiosRequest, config, then, catchError, withoutRedirect);
-                    } else if (catchError !== undefined) {
-                        catchError(error.response.data);
-                    }
-                } else if (error.request) {
-                    console.log('Made request but got no response:', error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-            });
-        },
-        refreshJwt(axiosRequest, config, then, catchError, withoutRedirect) {
-            const refresh = localStorage.getItem('jwtRefresh');
-            if (!refresh) {
-                if (!withoutRedirect) {
-                    this.$router.push({name: 'login'});
-                }
-                return;
-            }
-
-            axios.post('/api/v1/token/refresh/', {refresh}).then(response => {
-                localStorage.setItem('jwtAccess', response.data.access);
-                config['headers']['Authorization'] = 'Bearer ' + response.data.access;
-                this.requestWithJwt(axiosRequest, config, then, catchError, withoutRedirect, true);
-            }).catch(() => {
-                this.$root.$emit('clearJwt');
-                if (!withoutRedirect) {
-                    this.$router.push({name: 'login'});
-                }
-            });
-        },
-        prepareRequest(url, data, config) {
-            let _config = config === undefined ? {} : config;
-            if (!('headers' in _config)) {
-                _config['headers'] = {};
-            }
-            _config['headers']['Authorization'] = 'Bearer ' + localStorage.getItem('jwtAccess');
-            return [
-                url === undefined ? '/' : url,
-                data === undefined ? {} : data,
-                config,
-            ];
         }
     },
     beforeCreate() {
@@ -82,14 +29,17 @@ export default {
         });
 
         this.$root.$on("login", (username, password) => {
-            this.$root.$emit('axiosPost', '/api/v1/token/', {username, password}, {}, response => {
+            axiosPost(
+                '/api/v1/token/', {username, password},
+                {}, true
+            ).then(response => {
                 localStorage.setItem('jwtAccess', response.data.access);
                 localStorage.setItem('jwtRefresh', response.data.refresh);
                 this.$root.$emit("getUser");
                 this.$router.push({name: 'index'});
-            }, error => {
-                this.$root.$emit('loginValidationError', error);
-            }, true);
+            }).catch(error => {
+                this.$root.$emit('loginValidationError', error.data);
+            });``
         });
 
         this.$root.$on("clearJwt", () => {
@@ -104,43 +54,20 @@ export default {
         });
 
         this.$root.$on("getUser", () => {
-            this.$root.$emit(
-                'axiosGet', '/api/v1/token/user/', {},
-                response => {
+            if (isAuthenticated()) {
+                axiosGet('/api/v1/token/user/', {}, true).then(response => {
                     this.user = response.data;
-                }, error => alert(JSON.stringify(error)), true
-            );
-        });
-
-        this.$root.$on("axiosPost", (url, data, config, then, catchError, withoutRedirect) => {
-            const [_url, _data, _config] = this.prepareRequest(url, data, config);
-            this.requestWithJwt(
-                (config) => axios.post(_url, _data, config),
-                _config, then, catchError, withoutRedirect
-            );
-        });
-
-        this.$root.$on("axiosPatch", (url, data, config, then, catchError, withoutRedirect) => {
-            const [_url, _data, _config] = this.prepareRequest(url, data, config);
-            this.requestWithJwt(
-                (config) => axios.patch(_url, _data, config),
-                _config, then, catchError, withoutRedirect
-            );
-        });
-
-        this.$root.$on("axiosGet", (url, config, then, catchError, withoutRedirect) => {
-            // eslint-disable-next-line no-unused-vars
-            const [_url, _, _config] = this.prepareRequest(url, undefined, config);
-            this.requestWithJwt(
-                (config) => axios.get(_url, config),
-                _config, then, catchError, withoutRedirect
-            );
+                }).catch(error => {
+                    this.user = undefined;
+                    if (error.status !== 401) {
+                        console.log("Error during getting user: " + JSON.stringify(error.data));
+                    }
+                })
+            }
         });
     },
     mounted() {
-        if (localStorage.getItem('jwtAccess') !== undefined) {
-            this.$root.$emit('getUser');
-        }
+        this.$root.$emit('getUser');
     }
 }
 </script>
@@ -148,5 +75,6 @@ export default {
 <style>
 #app {
     text-align: center;
+    min-width: 800px;
 }
 </style>

@@ -6,6 +6,7 @@
 
 <script>
 import Game from "@/components/ticTacToe/Game";
+import {axiosGet} from "@/requests";
 
 export default {
     name: "History",
@@ -39,7 +40,7 @@ export default {
         },
     },
     beforeMount() {
-        this.$root.$emit("axiosGet", `/api/v1/ticTacToe/game/${this.id}`, {}, response => {
+        axiosGet(`/api/v1/ticTacToe/game/${this.id}`).then(response => {
             this.game = response.data;
             this.fillBoard();
         });
