@@ -14,12 +14,6 @@ export default {
             ];
         }
     },
-    mounted() {
-        this.$root.navLinks = this.getNavLinks();
-    },
-    beforeUpdate() {
-        this.$root.navLinks = this.getNavLinks();
-    },
 }
 </script>
 

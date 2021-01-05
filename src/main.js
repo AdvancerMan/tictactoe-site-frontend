@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router/router'
+import router, {initNavLinks} from './router/router'
 
 Vue.config.productionTip = false
 
@@ -9,9 +9,9 @@ const vm = new Vue({
     render: h => h(App),
     data() {
         return {
-            navLinks: []
+            navLinks: initNavLinks
         }
-    }
+    },
 }).$mount('#app')
 
 window.vue = vm;

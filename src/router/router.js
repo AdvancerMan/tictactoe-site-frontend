@@ -94,21 +94,49 @@ router.beforeResolve((to, from, next) => {
 });
 
 router.beforeEach(function (to, from, next) {
-    if (to.meta.requiresAuth) {
-        if (isAuthenticated()) {
-            next();
-        } else {
-            // TODO friendly alert that page requires login
-            alert("Login required");
-            next({name: 'login'});
-        }
+    if (to.meta.requiresAuth && !isAuthenticated()) {
+        // TODO friendly alert that page requires login
+        alert("Login required");
+        next({name: 'login'});
     } else {
         next();
     }
 });
 
 router.afterEach(() => {
-    NProgress.done()
-})
+    NProgress.done();
+});
 
-export default router
+
+function getRootNavLinks() {
+    return [
+        ['index', 'Home'],
+        ['ticTacToe-lobby', 'Tic Tac Toe'],
+    ];
+}
+
+export let initNavLinks = [];
+
+router.beforeEach((to, from, next) => {
+    let getNavLinks = undefined;
+    for (const route of to.matched.slice().reverse()) {
+        const methods = route.components.default.methods;
+        if (methods !== undefined) {
+            getNavLinks = methods.getNavLinks;
+            if (getNavLinks !== undefined) {
+                break
+            }
+        }
+    }
+    const navLinks = getNavLinks === undefined ? getRootNavLinks() : getNavLinks();
+
+    if (window.vue === undefined) {
+        initNavLinks = navLinks;
+    } else {
+        window.vue.navLinks = navLinks;
+    }
+
+    next();
+});
+
+export default router;
