@@ -13,6 +13,7 @@ import TicTacToeLobby from "@/components/ticTacToe/Lobby";
 import TicTacToeRoom from "@/components/ticTacToe/Room";
 import TicTacToeCreate from "@/components/ticTacToe/Create";
 import TicTacToe from "@/components/ticTacToe/TicTacToe";
+import TicTacToeMyGames from "@/components/ticTacToe/MyGames";
 
 Vue.use(VueRouter);
 
@@ -33,7 +34,7 @@ const routes = [
         component: Register
     },
     {
-        path: '/ticTacToe',
+        path: '/tictactoe',
         redirect: {name: 'ticTacToe-lobby'},
         component: TicTacToe,
         children: [
@@ -50,6 +51,15 @@ const routes = [
                 path: 'create',
                 name: 'ticTacToe-create',
                 component: TicTacToeCreate,
+            },
+            {
+                path: 'games',
+                redirect: {name: 'ticTacToe-myGames'},
+            },
+            {
+                path: 'games/my',
+                name: 'ticTacToe-myGames',
+                component: TicTacToeMyGames,
             },
             {
                 path: 'game/:id',

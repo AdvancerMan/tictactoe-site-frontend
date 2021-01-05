@@ -11,6 +11,7 @@ export default {
                 ['index', 'Home'],
                 ['ticTacToe-lobby', 'Lobby'],
                 ['ticTacToe-create', 'Create a game'],
+                ['ticTacToe-myGames', 'My games'],
             ];
         }
     },
