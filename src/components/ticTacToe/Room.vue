@@ -26,14 +26,23 @@ import NotFound404 from "@/components/NotFound404";
 export default {
     name: "Room",
     components: {NotFound404},
-    props: ['id'],
+    props: ['id', 'user'],
     data() {
         return {
             game: {},
             fetchingGame: true,
             color: '',
             error: '',
+            destroyed: false,
         }
+    },
+    computed: {
+        fetchingPlayers() {
+            return !this.destroyed && !this.game.started;
+        },
+        fetchingStarted() {
+            return this.fetchingPlayers && (this.game === undefined || this.game.owner !== this.user.id);
+        },
     },
     methods: {
         join() {
@@ -44,7 +53,7 @@ export default {
                     color: this.color
                 }).then(() => {
                     // TODO username
-                    this.game.players.push({username: 'me'});
+                    this.game.players.push({username: this.user.username});
                 }).catch(error => {
                     this.error = error.data;
                 });
@@ -56,7 +65,37 @@ export default {
             }).catch(error => {
                 this.error = error.data;
             });
-        }
+        },
+        fetchStarted() {
+            axiosGet(`/api/v1/ticTacToe/game/${this.id}/started`).then(response => {
+                this.game.started = response.data.started;
+                if (this.game.started) {
+                    this.$router.push({name: 'ticTacToe-play', params: {id: this.id}});
+                }
+            });
+        },
+        fetchPlayers() {
+            axiosGet(`/api/v1/ticTacToe/game/${this.id}/players`).then(response => {
+                this.game.players = response.data.players;
+                this.game.colors = response.data.colors;
+            });
+        },
+        fetchStartedContinuously() {
+            setTimeout(() => {
+                if (this.fetchingStarted) {
+                    this.fetchStarted();
+                    this.fetchStartedContinuously();
+                }
+            }, 1000);
+        },
+        fetchPlayersContinuously() {
+            setTimeout(() => {
+                if (this.fetchingPlayers) {
+                    this.fetchPlayers();
+                    this.fetchPlayersContinuously();
+                }
+            }, 5000);
+        },
     },
     beforeMount() {
         axiosGet(`/api/v1/ticTacToe/game/${this.id}`).then(response => {
@@ -64,6 +103,13 @@ export default {
         }).catch(() => {
             // no operations
         }).then(() => this.fetchingGame = false);
+    },
+    mounted() {
+        this.fetchPlayersContinuously();
+        this.fetchStartedContinuously();
+    },
+    beforeDestroy() {
+        this.destroyed = true;
     }
 }
 </script>
