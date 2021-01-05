@@ -47,7 +47,11 @@ export default {
                 const turn = this.game.history[i];
                 this.$set(this.board[turn[0]], turn[1], i % this.game.players.length);
             }
-            this.turnIndex = this.game.history.length % this.game.players.length;
+            if (this.finished) {
+                this.turnIndex = Math.max(0, this.game.history.length - 1) % this.game.players.length;
+            } else {
+                this.turnIndex = this.game.history.length % this.game.players.length;
+            }
         },
         makeTurn(i, j) {
             axiosPatch(`/api/v1/ticTacToe/game/${this.id}/turn`, {i, j}).then(response => {
@@ -56,7 +60,7 @@ export default {
                 if (!this.finished && response.data.start[0] !== null) {
                     response.data.winner = this.user;
                     this.winData = response.data;
-                    this.turnIndex = (userIndex + 1) % this.game.players.length;
+                    this.turnIndex = userIndex % this.game.players.length;
                 }
             }).catch(error => {
                 this.turnErrors = error.data;
@@ -79,7 +83,8 @@ export default {
                 this.turnIndex = this.game.history.length % this.game.players.length;
 
                 if (!this.finished && response.data.win_data !== undefined) {
-                    const winnerIndex = (this.game.history.length - 1) % this.game.players.length;
+                    const winnerIndex = Math.max(0, this.game.history.length - 1) % this.game.players.length;
+                    this.turnIndex = winnerIndex;
                     response.data.win_data.winner = this.game.players[winnerIndex];
                     this.winData = response.data.win_data;
                 }
@@ -99,6 +104,7 @@ export default {
     beforeMount() {
         axiosGet(`/api/v1/ticTacToe/game/${this.id}`).then(response => {
             this.game = response.data;
+            this.winData = this.game.win_data;
             this.fillBoard();
             this.fetchHistoryContinuously();
         }).catch(() => {

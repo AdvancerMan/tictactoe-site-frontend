@@ -36,7 +36,7 @@ export default {
         fetchGamesContinuously() {
             this.fetchGames();
             setTimeout(() => {
-                if (!this.finished) {
+                if (!this.destroyed) {
                     this.fetchGamesContinuously();
                 }
             }, 2500);
