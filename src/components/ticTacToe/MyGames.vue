@@ -5,19 +5,17 @@
             <option value="finished">Finished</option>
             <option value="all">All</option>
         </select>
-        <ul>
-            <li v-for="game in games" :key="game.id">
-                {{ JSON.stringify(game) }}
-            </li>
-        </ul>
+        <GameList :games="games"/>
     </div>
 </template>
 
 <script>
 import {axiosGet} from "@/requests";
+import GameList from "@/components/ticTacToe/GameList";
 
 export default {
     name: "MyGames",
+    components: {GameList},
     data() {
         return {
             gamesType: 'unfinished',

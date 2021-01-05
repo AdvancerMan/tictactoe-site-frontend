@@ -1,20 +1,17 @@
 <template>
     <div>
         <input @click.prevent="redirectToCreate" type="submit" value="Create a game"/>
-        <ul>
-            <li v-for="game in games" :key="game.id">
-                {{ JSON.stringify(game) }}
-                <input @click="enter(game)" type="submit" value="Enter">
-            </li>
-        </ul>
+        <GameList :games="games"/>
     </div>
 </template>
 
 <script>
 import {axiosGet} from "@/requests";
+import GameList from "@/components/ticTacToe/GameList";
 
 export default {
     name: "Lobby",
+    components: {GameList},
     props: ['page', 'count'],
     data() {
         return {
@@ -23,9 +20,6 @@ export default {
         };
     },
     methods: {
-        enter(game) {
-            this.$router.push({name: 'ticTacToe-room', params: {id: game.id}});
-        },
         redirectToCreate() {
             this.$router.push({name: 'ticTacToe-create'});
         },
@@ -58,8 +52,5 @@ export default {
 </script>
 
 <style scoped>
-li {
-    background-color: #F7D002;
-    margin-top: 1rem;
-}
+
 </style>
