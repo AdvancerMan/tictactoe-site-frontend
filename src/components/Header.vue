@@ -5,7 +5,7 @@
         </router-link>
         <nav>
             <ul>
-                <li v-for="[routeName, title] in navLinks" :key="routeName">
+                <li v-for="[routeName, title] in $root.navLinks" :key="routeName">
                     <router-link :to="{name: routeName}">
                         {{ title }}
                     </router-link>
@@ -33,14 +33,6 @@
 export default {
     name: "Header",
     props: ["user"],
-    data() {
-        return {
-            navLinks: [
-                ['index', 'Home'],
-                ['ticTacToe-lobby', 'Tic Tac Toe'],
-            ]
-        }
-    }
 }
 </script>
 

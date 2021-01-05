@@ -19,6 +19,14 @@ export default {
             user: undefined,
         }
     },
+    methods: {
+        getNavLinks() {
+            return [
+                ['index', 'Home'],
+                ['ticTacToe-lobby', 'Tic Tac Toe'],
+            ];
+        }
+    },
     beforeCreate() {
         this.$root.$on("register", (login, password, passwordAgain) => {
             if (password !== passwordAgain) {
@@ -67,7 +75,11 @@ export default {
         });
     },
     mounted() {
+        this.$root.navLinks = this.getNavLinks();
         this.$root.$emit('getUser');
+    },
+    beforeUpdate() {
+        this.$root.navLinks = this.getNavLinks();
     }
 }
 </script>
