@@ -70,6 +70,11 @@ export default {
                 });
 
                 this.turnIndex = this.game.history.length % this.game.players.length;
+
+                if (response.data.win_data !== undefined) {
+                    this.game.win_data = response.data.win_data;
+                    this.$root.$emit('ticTacToe-finishGame');
+                }
             }).catch(error => {
                 this.turnErrors = error.data;
             });
