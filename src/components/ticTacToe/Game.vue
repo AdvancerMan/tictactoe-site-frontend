@@ -33,7 +33,7 @@ import NotFound404 from "@/components/NotFound404";
 export default {
     name: "Game",
     components: {NotFound404, Board},
-    props: ['game', 'board', 'turnIndex', 'turnErrors', 'notFound'],
+    props: ['game', 'board', 'turnIndex', 'turnErrors', 'notFound', 'winData'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];
@@ -49,20 +49,21 @@ export default {
     methods: {
         makeTurn(i, j) {
             this.$emit('makeTurn', i, j);
-        }
-    },
-    beforeCreate() {
-        this.$root.$on('ticTacToe-finishGame', () => {
-            if (this.game.win_data.start[0] === -1) {
+        },
+        finishGame(winData) {
+            if (winData.start[0] === -1) {
                 alert(`It's a tie!`);
             } else {
-                const players_cnt = this.game.players.length;
-                const winnerIndex = (this.game.history.length) % players_cnt;
-                const winner = this.game.players[winnerIndex].username;
-                const win_data = JSON.stringify(this.game.win_data);
-                alert(`${winner} won! win_data = ${win_data}`);
+                alert(`${winData.winner.username} won! win_data = ${JSON.stringify(winData)}`);
             }
-        });
+        }
+    },
+    watch: {
+        winData(data) {
+            if (data !== undefined && data.start[0] !== null) {
+                this.finishGame(data);
+            }
+        }
     }
 }
 </script>

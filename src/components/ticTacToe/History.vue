@@ -1,7 +1,7 @@
 <template>
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
-        :notFound="!fetchingGame && Object.keys(game).length === 0"/>
+              :winData="winData" :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
     data() {
         return {
             game: {},
+            winData: {start: [null]},
             turnIndex: 0,
             board: [],
             fetchingGame: true,
@@ -24,9 +25,10 @@ export default {
     methods: {
         colorCell(index) {
             const players_cnt = this.game.players.length;
-            if (index >= this.game.history.length) {
+            if (index === this.game.history.length) {
                 if (this.game.win_data.start[0] !== null) {
-                    this.$root.$emit('ticTacToe-finishGame');
+                    this.game.win_data.winner = this.game.players[(index - 1) % this.game.players.length];
+                    this.winData = this.game.win_data;
                 }
                 return;
             }

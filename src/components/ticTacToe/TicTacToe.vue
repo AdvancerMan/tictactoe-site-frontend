@@ -1,10 +1,11 @@
 <template>
-    <router-view/>
+    <router-view :user="user"/>
 </template>
 
 <script>
 export default {
     name: "TicTacToe",
+    props: ['user'],
     methods: {
         getNavLinks() {
             return [

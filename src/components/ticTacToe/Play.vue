@@ -2,6 +2,7 @@
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
               :turnErrors="turnErrors" v-on:makeTurn="makeTurn"
+              :winData="winData"
               :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
@@ -13,10 +14,11 @@ import {axiosGet, axiosPatch} from "@/requests";
 export default {
     name: "Play",
     components: {Game},
-    props: ['id'],
+    props: ['id', 'user'],
     data() {
         return {
             game: {},
+            winData: {start: [null]},
             turnIndex: 0,
             board: [],
             turnErrors: '',
@@ -25,8 +27,11 @@ export default {
         }
     },
     computed: {
+        finished() {
+            return this.winData.start[0] !== null;
+        },
         fetchingHistory() {
-            return !(this.destroyed || this.game.win_data.start[0] !== null);
+            return !(this.destroyed || this.finished);
         }
     },
     methods: {
@@ -46,10 +51,12 @@ export default {
         },
         makeTurn(i, j) {
             axiosPatch(`/api/v1/ticTacToe/game/${this.id}/turn`, {i, j}).then(response => {
-                this.$set(this.board[i], j, this.turnIndex);
-                if (response.data.start[0] !== null) {
-                    this.game.win_data = response.data;
-                    this.$root.$emit('ticTacToe-finishGame');
+                const userIndex = this.game.order.indexOf(this.user.id);
+                this.$set(this.board[i], j, userIndex);
+                if (!this.finished && response.data.start[0] !== null) {
+                    response.data.winner = this.user;
+                    this.winData = response.data;
+                    this.turnIndex = (userIndex + 1) % this.game.players.length;
                 }
             }).catch(error => {
                 this.turnErrors = error.data;
@@ -71,9 +78,10 @@ export default {
 
                 this.turnIndex = this.game.history.length % this.game.players.length;
 
-                if (response.data.win_data !== undefined) {
-                    this.game.win_data = response.data.win_data;
-                    this.$root.$emit('ticTacToe-finishGame');
+                if (!this.finished && response.data.win_data !== undefined) {
+                    const winnerIndex = (this.game.history.length - 1) % this.game.players.length;
+                    response.data.win_data.winner = this.game.players[winnerIndex];
+                    this.winData = response.data.win_data;
                 }
             }).catch(error => {
                 this.turnErrors = error.data;
