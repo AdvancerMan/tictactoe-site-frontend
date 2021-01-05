@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Index from "@/components/Index";
-import NotFound404 from "@/components/NotFound404";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css';
-import TicTacToeGameHistory from "@/components/ticTacToe/History";
-import TicTacToePlay from "@/components/ticTacToe/Play";
+import Index from "@/components/Index";
+import {isAuthenticated} from "@/requests";
 import Login from "@/components/credentials/Login";
 import Register from "@/components/credentials/Register";
-import {isAuthenticated} from "@/requests";
+import NotFound404 from "@/components/NotFound404";
+import TicTacToeGameHistory from "@/components/ticTacToe/History";
+import TicTacToePlay from "@/components/ticTacToe/Play";
+import TicTacToeLobby from "@/components/ticTacToe/Lobby";
+import TicTacToeRoom from "@/components/ticTacToe/Room";
+import TicTacToeCreate from "@/components/ticTacToe/Create";
+import TicTacToe from "@/components/ticTacToe/TicTacToe";
 
 Vue.use(VueRouter);
 
@@ -28,39 +32,47 @@ const routes = [
         name: 'register',
         component: Register
     },
-    // { TODO
-    //     path: '/ticTacToe',
-    //     redirect: {name: 'ticTacToe-lobby'}
-    // },
-    // { TODO
-    //     path: '/ticTacToe/lobby',
-    //     name: 'ticTacToe-lobby',
-    //     component:
-    // },
-    // { TODO
-    //     path: '/ticTacToe/create',
-    //     name: 'ticTacToe-create',
-    //     component:
-    // },
-    // { TODO
-    //     path: '/ticTacToe/game/:id',
-    //     name: 'ticTacToe-room',
-    //     component:
-    // },
     {
-        path: '/ticTacToe/game/:id/play',
-        name: 'ticTacToe-play',
-        component: TicTacToePlay,
-        props: true,
-        meta: {
-            requiresAuth: true
-        }
-    },
-    {
-        path: '/ticTacToe/game/:id/history',
-        name: 'ticTacToe-history',
-        component: TicTacToeGameHistory,
-        props: true,
+        path: '/ticTacToe',
+        redirect: {name: 'ticTacToe-lobby'},
+        component: TicTacToe,
+        children: [
+            {
+                path: 'lobby',
+                name: 'ticTacToe-lobby',
+                component: TicTacToeLobby,
+                props: route => ({
+                    page: route.query.page,
+                    count: route.query.count,
+                }),
+            },
+            {
+                path: 'create',
+                name: 'ticTacToe-create',
+                component: TicTacToeCreate,
+            },
+            {
+                path: 'game/:id',
+                name: 'ticTacToe-room',
+                component: TicTacToeRoom,
+                props: true,
+            },
+            {
+                path: 'game/:id/play',
+                name: 'ticTacToe-play',
+                component: TicTacToePlay,
+                props: true,
+                meta: {
+                    requiresAuth: true
+                }
+            },
+            {
+                path: 'game/:id/history',
+                name: 'ticTacToe-history',
+                component: TicTacToeGameHistory,
+                props: true,
+            },
+        ]
     },
     {
         path: '*',
