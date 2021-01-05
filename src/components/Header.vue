@@ -64,17 +64,12 @@ header nav ul {
 
 header nav ul li {
     display: inline;
-    margin-right: 1rem;
 }
 
 header .login-register {
     position: absolute;
-    right: 3rem;
+    right: 2rem;
     top: 1.2rem;
-}
-
-header .login-register *:nth-child(1) {
-    margin-right: 1rem;
 }
 
 header nav ul li a,
@@ -82,15 +77,10 @@ header .login-register * {
     text-decoration: none;
     font-weight: bold;
     color: var(--header-link-color);
+    padding: 1.2rem 0.5rem;
 }
 
-header nav ul li a:hover,
-header .title:hover,
-header .login-register *:hover {
+header a:hover {
     color: var(--header-onlink-color);
-}
-
-header .login-register span:hover {
-    color: inherit;
 }
 </style>
