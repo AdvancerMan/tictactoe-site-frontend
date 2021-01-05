@@ -26,7 +26,7 @@ export default {
     },
     computed: {
         fetchingHistory() {
-            return !(this.destroyed || this.game.win_data.win_line_start[0]);
+            return !(this.destroyed || this.game.win_data.start[0] !== null);
         }
     },
     methods: {
