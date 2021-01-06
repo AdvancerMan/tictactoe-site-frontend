@@ -1,13 +1,41 @@
 <template>
-    <ul>
-        <li v-for="game in games" :key="game.id">
-            {{ JSON.stringify(game) }}
-            <input v-if="myGames && game.finished || !myGames && game.started"
-                   @click="history(game)" type="submit" value="History">
-            <input v-else @click="enter(game)"
-                   type="submit" value="Enter">
-        </li>
-    </ul>
+    <table class="tic-tac-toe-table">
+        <thead>
+        <tr>
+            <th>Status</th>
+            <th>Width</th>
+            <th>Height</th>
+            <th>Threshold</th>
+            <th>Owner</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody v-if="games.length">
+        <tr v-for="game in games" :key="game.id">
+            <td>
+                {{ !game.started ? 'waiting' : (game.finished ? 'finished' : 'started') }}
+            </td>
+            <td>{{ game.width }}</td>
+            <td>{{ game.height }}</td>
+            <td>{{ game.win_threshold }}</td>
+            <td>{{ game.owner.username }}</td>
+            <td class="table-button" @click="history(game)"
+                v-if="myGames && game.finished || !myGames && game.started">
+                History
+            </td>
+            <td class="table-button" v-else @click="enter(game)">
+                Enter
+            </td>
+        </tr>
+        </tbody>
+        <tbody v-else>
+        <tr>
+            <td colspan="6">
+                No games
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </template>
 
 <script>
@@ -26,8 +54,12 @@ export default {
 </script>
 
 <style scoped>
-li {
-    background-color: #F7D002;
-    margin-top: 1rem;
+.tic-tac-toe-table {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.tic-tac-toe-table tr > * {
+    padding: 0.5rem 1rem;
 }
 </style>

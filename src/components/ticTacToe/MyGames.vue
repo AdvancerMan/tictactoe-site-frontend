@@ -5,7 +5,7 @@
             <option value="finished">Finished</option>
             <option value="all">All</option>
         </select>
-        <GameList :games="games" :user="user" :myGames="true"/>
+        <GameList class="game-list" :games="games" :user="user" :myGames="true"/>
     </div>
 </template>
 
@@ -49,5 +49,7 @@ export default {
 </script>
 
 <style scoped>
-
+.game-list {
+    margin-top: 1rem;
+}
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div>
-        <input @click.prevent="redirectToCreate" type="submit" value="Create a game"/>
         <GameList :games="games" :user="user" :myGames="false"/>
     </div>
 </template>
@@ -20,9 +19,6 @@ export default {
         };
     },
     methods: {
-        redirectToCreate() {
-            this.$router.push({name: 'ticTacToe-create'});
-        },
         fetchGames() {
             axiosGet(`/api/v1/ticTacToe/games/waiting`, {
                 params: {

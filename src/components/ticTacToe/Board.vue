@@ -1,5 +1,5 @@
 <template>
-    <table>
+    <table class="tic-tac-toe-table">
         <tbody>
         <tr v-for="i in board.length" :key="i">
             <td v-for="j in board[i - 1].length" :key="j"
@@ -26,16 +26,7 @@ export default {
 </script>
 
 <style scoped>
-table {
-    border: var(--tic-tac-toe-table-border);
-    border-collapse: collapse;
-}
-
-table tr td {
-    border: var(--tic-tac-toe-cell-border);
-}
-
-table tr td *:first-child {
+.tic-tac-toe-table tr td *:first-child {
     width: var(--tic-tac-toe-cell-size);
     height: var(--tic-tac-toe-cell-size);
 }
