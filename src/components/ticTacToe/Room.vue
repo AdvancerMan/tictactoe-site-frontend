@@ -8,12 +8,14 @@
                     {{ player.username }}
                 </li>
             </ul>
-<!--            TODO if not joined -->
-            <form @submit.prevent="join">
+            <form v-if="game.players !== undefined && user !== undefined
+                        && !game.players.find(p => p.id === user.id)"
+                  @submit.prevent="join">
                 <label>Take your color: <input v-model="color"/></label>
                 <input type="submit" value="Join"/>
             </form>
-            <input @click.prevent="start" type="submit" value="Start"/>
+            <input v-else-if="user !== undefined && user.id === game.owner" @click.prevent="start"
+                   type="submit" value="Start"/>
             <div>{{ error }}</div>
         </div>
     </div>
@@ -41,7 +43,8 @@ export default {
             return !this.destroyed && !this.game.started;
         },
         fetchingStarted() {
-            return this.fetchingPlayers && (this.game === undefined || this.game.owner !== this.user.id);
+            return this.fetchingPlayers &&
+                (this.game === undefined || this.user === undefined || this.game.owner !== this.user.id);
         },
     },
     methods: {
@@ -52,7 +55,6 @@ export default {
                 axiosPatch(`/api/v1/ticTacToe/game/${this.id}/join`, {
                     color: this.color
                 }).then(() => {
-                    // TODO username
                     this.game.players.push({username: this.user.username});
                 }).catch(error => {
                     this.error = error.data;
@@ -96,6 +98,27 @@ export default {
                 }
             }, 5000);
         },
+        redirectIfStarted(game, user) {
+            if (game.started) {
+                if (game.players.find(p => p.id === user.id) && !game.finished) {
+                    this.$router.push({name: 'ticTacToe-play', params: {id: this.id}});
+                } else {
+                    this.$router.push({name: 'ticTacToe-history', params: {id: this.id}});
+                }
+            }
+        }
+    },
+    watch: {
+        game(value) {
+            if (this.user !== undefined) {
+                this.redirectIfStarted(value, this.user);
+            }
+        },
+        user(value) {
+            if (this.game !== {}) {
+                this.redirectIfStarted(this.game, value);
+            }
+        }
     },
     beforeMount() {
         axiosGet(`/api/v1/ticTacToe/game/${this.id}`).then(response => {
@@ -115,8 +138,8 @@ export default {
 </script>
 
 <style scoped>
-    form {
-        margin-bottom: 1rem;
-        margin-top: 1rem;
-    }
+form {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
 </style>

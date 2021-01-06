@@ -5,7 +5,7 @@
             <option value="finished">Finished</option>
             <option value="all">All</option>
         </select>
-        <GameList :games="games"/>
+        <GameList :games="games" :user="user" :myGames="true"/>
     </div>
 </template>
 
@@ -16,6 +16,7 @@ import GameList from "@/components/ticTacToe/GameList";
 export default {
     name: "MyGames",
     components: {GameList},
+    props: ['user'],
     data() {
         return {
             gamesType: 'unfinished',

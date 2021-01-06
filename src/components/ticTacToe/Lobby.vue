@@ -1,7 +1,7 @@
 <template>
     <div>
         <input @click.prevent="redirectToCreate" type="submit" value="Create a game"/>
-        <GameList :games="games"/>
+        <GameList :games="games" :user="user" :myGames="false"/>
     </div>
 </template>
 
@@ -12,7 +12,7 @@ import GameList from "@/components/ticTacToe/GameList";
 export default {
     name: "Lobby",
     components: {GameList},
-    props: ['page', 'count'],
+    props: ['user', 'page', 'count'],
     data() {
         return {
             games: [],

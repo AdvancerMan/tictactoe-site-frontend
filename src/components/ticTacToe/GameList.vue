@@ -2,8 +2,8 @@
     <ul>
         <li v-for="game in games" :key="game.id">
             {{ JSON.stringify(game) }}
-            <input v-if="game.started" @click="history(game)"
-                   type="submit" value="History">
+            <input v-if="myGames && game.finished || !myGames && game.started"
+                   @click="history(game)" type="submit" value="History">
             <input v-else @click="enter(game)"
                    type="submit" value="Enter">
         </li>
@@ -13,7 +13,7 @@
 <script>
 export default {
     name: "GameList",
-    props: ['games'],
+    props: ['games', 'myGames'],
     methods: {
         enter(game) {
             this.$router.push({name: 'ticTacToe-room', params: {id: game.id}});
