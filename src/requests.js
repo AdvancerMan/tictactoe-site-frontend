@@ -41,6 +41,11 @@ function requestWithJwt(config, withoutRedirect, resolve, reject, again) {
 }
 
 function refreshJwt(config, error, withoutRedirect, resolve, reject) {
+    if (localStorage.getItem('refreshingJwt') !== null) {
+        waitJwtRefresh(config, withoutRedirect, resolve, reject);
+        return;
+    }
+
     const refresh = localStorage.getItem('jwtRefresh');
     if (!refresh) {
         if (!withoutRedirect) {
@@ -50,6 +55,7 @@ function refreshJwt(config, error, withoutRedirect, resolve, reject) {
         return;
     }
 
+    localStorage.setItem('refreshingJwt', 'true');
     axios.post('/api/v1/token/refresh/', {refresh}).then(response => {
         localStorage.setItem('jwtAccess', response.data.access);
         config['headers']['Authorization'] = `Bearer ${response.data.access}`;
@@ -60,7 +66,18 @@ function refreshJwt(config, error, withoutRedirect, resolve, reject) {
             window.vue.$router.push({name: 'login'});
         }
         reject(getAndLogAxiosErrorResponse(error));
-    });
+    }).then(() => localStorage.removeItem('refreshingJwt'));
+}
+
+function waitJwtRefresh(config, withoutRedirect, resolve, reject) {
+    setTimeout(() => {
+        if (localStorage.getItem('refreshingJwt') === null) {
+            config['headers']['Authorization'] = `Bearer ${localStorage.getItem('jwtAccess')}`;
+            requestWithJwt(config, withoutRedirect, resolve, reject, true);
+        } else {
+            waitJwtRefresh(config, withoutRedirect, resolve, reject);
+        }
+    }, 30);
 }
 
 function prepareConfig(method, url, data = {}, config = {}) {
