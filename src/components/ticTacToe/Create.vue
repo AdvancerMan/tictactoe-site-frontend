@@ -5,7 +5,7 @@
             <label>Width <input type="text" v-model="width"></label>
             <label>Height <input type="text" v-model="height"></label>
             <label>Win threshold <input type="text" v-model="win_threshold"></label>
-            <SelectColor @setColor="color = $event"/>
+            <TicTacToeSelectColor @setColor="color = $event"/>
             <input type="submit" value="Create"/>
         </form>
         <div>
@@ -16,11 +16,11 @@
 
 <script>
 import {axiosPost} from "@/requests";
-import SelectColor from "@/components/SelectColor";
+import TicTacToeSelectColor from "@/components/ticTacToe/TicTacToeSelectColor";
 
 export default {
     name: "Create",
-    components: {SelectColor},
+    components: {TicTacToeSelectColor},
     data() {
         return {
             width: 0,

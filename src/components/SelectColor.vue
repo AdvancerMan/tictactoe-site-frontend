@@ -1,7 +1,8 @@
 <template>
     <div>
         <div v-if="confirmSwitchIndex === switchPhrases.length" class="select-color-container">
-            <ColorPicker :color="color" v-on:color-change="color = $event.cssColor" :visibleFormats="['rgb']">
+            <ColorPicker :color="color" :visibleFormats="['rgb']"
+                         v-on:color-change="color = $event.colors.hex.slice(0, 7)">
                 <template #hue-range-input-label>
                     Choose color
                 </template>
@@ -47,10 +48,18 @@ export default {
     watch: {
         color(value) {
             this.$emit('setColor', value);
+        },
+        confirmSwitchIndex(value) {
+            if (value === this.switchPhrases.length) {
+                this.$emit('setManyColors', true);
+            } else if (value === 0) {
+                this.$emit('setManyColors', false);
+            }
         }
     },
     mounted() {
         this.$emit('setColor', this.color);
+        this.$emit('setManyColors', false);
     }
 }
 </script>

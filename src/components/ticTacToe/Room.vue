@@ -11,7 +11,7 @@
             <form v-if="game.players !== undefined && user !== undefined
                         && !game.players.find(p => p.id === user.id)"
                   @submit.prevent="join">
-                <SelectColor @setColor="color = $event"/>
+                <TicTacToeSelectColor @setColor="color = $event"/>
                 <input type="submit" value="Join"/>
             </form>
             <input v-else-if="user !== undefined && user.id === game.owner" @click.prevent="start"
@@ -24,11 +24,11 @@
 <script>
 import {axiosGet, axiosPatch} from "@/requests";
 import NotFound404 from "@/components/NotFound404";
-import SelectColor from "@/components/SelectColor";
+import TicTacToeSelectColor from "@/components/ticTacToe/TicTacToeSelectColor";
 
 export default {
     name: "Room",
-    components: {SelectColor, NotFound404},
+    components: {TicTacToeSelectColor, NotFound404},
     props: ['id', 'user'],
     data() {
         return {
