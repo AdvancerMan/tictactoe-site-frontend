@@ -23,10 +23,10 @@ export default {
     components: {TicTacToeSelectColor},
     data() {
         return {
-            width: 0,
-            height: 0,
-            win_threshold: 0,
-            color: 0,
+            width: '',
+            height: '',
+            win_threshold: '',
+            color: '',
             error: '',
         }
     },

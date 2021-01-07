@@ -83,6 +83,7 @@ export default {
 
 .swatches-container span {
     margin-right: 2rem;
+    margin-bottom: 0.4rem;
 }
 
 .select-color-container input {

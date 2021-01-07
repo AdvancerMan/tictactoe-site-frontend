@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <SelectColor @setColor="color = $event" @setManyColors="manyColors = $event"/>
+    <div class="ttt-select-color-root">
+        <SelectColor class="select-color" @setColor="color = $event"
+                     @setManyColors="manyColors = $event"/>
         <img v-if="!manyColors" :src="picUrl('cross', color.slice(1))" alt="Your cross">
         <img v-if="!manyColors" :src="picUrl('circle', color.slice(1))" alt="Your circle">
     </div>
@@ -29,22 +30,29 @@ export default {
             return getCrossCirclePicUrl(type, color);
         }
     },
+    mounted() {
+        this.$emit('setColor', this.color);
+    }
 }
 </script>
 
 <style scoped>
-div {
+.ttt-select-color-root {
     display: flex;
     flex-direction: row;
     margin: 0 auto;
 }
 
-div > * {
+.ttt-select-color-root > * {
     margin-right: 2rem;
 }
 
-div > *:last-child {
+.ttt-select-color-root > *:last-child {
     margin-right: 0;
+}
+
+.ttt-select-color-root .select-color {
+    margin-top: 0.8rem;
 }
 
 img {
