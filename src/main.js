@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router, {initNavLinks} from './router/router'
+import ColorPicker from "vue-accessible-color-picker";
+
+Vue.use(ColorPicker);
 
 Vue.config.productionTip = false
 

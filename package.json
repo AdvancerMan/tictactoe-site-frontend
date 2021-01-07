@@ -12,7 +12,9 @@
     "core-js": "^3.6.5",
     "nprogress": "^0.2.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.0.1"
+    "vue-accessible-color-picker": "^1.1.2",
+    "vue-router": "^3.0.1",
+    "vue-swatches": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
