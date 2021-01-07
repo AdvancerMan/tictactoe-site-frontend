@@ -23,13 +23,15 @@
 </template>
 
 <script>
+import getCrossCirclePicUrl from "./getCrossCirclePicUrl";
+
 export default {
     name: "Board",
     props: ['board', 'colors'],
     methods: {
         picPath(i) {
             const type = i % 2 ? 'circle' : 'cross';
-            return `/api/v1/ticTacToe/pics/${type}/${this.colors[i].slice(1)}`;
+            return getCrossCirclePicUrl(type, this.colors[i].slice(1));
         },
     }
 }

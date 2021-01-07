@@ -1,13 +1,15 @@
 <template>
     <div>
         <SelectColor @setColor="color = $event" @setManyColors="manyColors = $event"/>
-        <img v-if="!manyColors" :src="`/api/v1/ticTacToe/pics/cross/${color.slice(1)}`" alt="Your cross">
-        <img v-if="!manyColors" :src="`/api/v1/ticTacToe/pics/circle/${color.slice(1)}`" alt="Your circle">
+        <img v-if="!manyColors" :src="picUrl('cross', color.slice(1))" alt="Your cross">
+        <img v-if="!manyColors" :src="picUrl('circle', color.slice(1))" alt="Your circle">
     </div>
 </template>
 
 <script>
 import SelectColor from "@/components/SelectColor";
+import getCrossCirclePicUrl from "./getCrossCirclePicUrl";
+
 export default {
     name: "TicTacToeSelectColor",
     components: {SelectColor},
@@ -21,7 +23,12 @@ export default {
         color(value) {
             this.$emit('setColor', value);
         }
-    }
+    },
+    methods: {
+        picUrl(type, color) {
+            return getCrossCirclePicUrl(type, color);
+        }
+    },
 }
 </script>
 
