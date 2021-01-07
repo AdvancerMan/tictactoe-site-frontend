@@ -5,7 +5,7 @@
             <label>Width <input type="text" v-model="width"></label>
             <label>Height <input type="text" v-model="height"></label>
             <label>Win threshold <input type="text" v-model="win_threshold"></label>
-            <label>My color <input type="text" v-model="color"></label>
+            <SelectColor @setColor="color = $event"/>
             <input type="submit" value="Create"/>
         </form>
         <div>
@@ -16,9 +16,11 @@
 
 <script>
 import {axiosPost} from "@/requests";
+import SelectColor from "@/components/SelectColor";
 
 export default {
     name: "Create",
+    components: {SelectColor},
     data() {
         return {
             width: 0,
@@ -61,6 +63,6 @@ input {
 
 input[type=submit] {
     width: fit-content;
-    margin: 0 auto;
+    margin: 1rem auto;
 }
 </style>

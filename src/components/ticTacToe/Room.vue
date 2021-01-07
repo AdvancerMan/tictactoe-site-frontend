@@ -11,7 +11,7 @@
             <form v-if="game.players !== undefined && user !== undefined
                         && !game.players.find(p => p.id === user.id)"
                   @submit.prevent="join">
-                <label>Take your color: <input v-model="color"/></label>
+                <SelectColor @setColor="color = $event"/>
                 <input type="submit" value="Join"/>
             </form>
             <input v-else-if="user !== undefined && user.id === game.owner" @click.prevent="start"
@@ -24,10 +24,11 @@
 <script>
 import {axiosGet, axiosPatch} from "@/requests";
 import NotFound404 from "@/components/NotFound404";
+import SelectColor from "@/components/SelectColor";
 
 export default {
     name: "Room",
-    components: {NotFound404},
+    components: {SelectColor, NotFound404},
     props: ['id', 'user'],
     data() {
         return {
