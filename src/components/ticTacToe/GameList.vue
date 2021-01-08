@@ -2,6 +2,7 @@
     <table class="tic-tac-toe-table">
         <thead>
         <tr>
+            <th>Created</th>
             <th>Status</th>
             <th>Width</th>
             <th>Height</th>
@@ -12,6 +13,7 @@
         </thead>
         <tbody v-if="games.length">
         <tr v-for="game in games" :key="game.id">
+            <td>{{ new Date(game.creation_time).toLocaleString(undefined, {hour12: false}) }}</td>
             <td>
                 {{ !game.started ? 'waiting' : (game.finished ? 'finished' : 'started') }}
             </td>
@@ -23,14 +25,14 @@
                 v-if="myGames && game.finished || !myGames && game.started">
                 History
             </td>
-            <td class="table-button" v-else @click="enter(game)">
+            <td class="table-button" @click="enter(game)" v-else>
                 Enter
             </td>
         </tr>
         </tbody>
         <tbody v-else>
         <tr>
-            <td colspan="6">
+            <td colspan="7">
                 No games
             </td>
         </tr>
