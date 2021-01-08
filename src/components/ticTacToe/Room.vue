@@ -1,13 +1,8 @@
 <template>
     <div>
         <NotFound404 v-if="!fetchingGame && Object.keys(game).length === 0"/>
-        <div v-else>
-            Players:
-            <ul>
-                <li v-for="player in game.players" :key="player.id">
-                    {{ player.username }}
-                </li>
-            </ul>
+        <div class="game-room" v-else>
+            <PlayerList :players="game.players" :colors="game.colors"/>
             <form v-if="game.players !== undefined && user !== undefined
                         && !game.players.find(p => p.id === user.id)"
                   @submit.prevent="join" class="select-color-form">
@@ -25,10 +20,11 @@
 import {axiosGet, axiosPatch} from "@/requests";
 import NotFound404 from "@/components/NotFound404";
 import TicTacToeSelectColor from "@/components/ticTacToe/TicTacToeSelectColor";
+import PlayerList from "@/components/ticTacToe/PlayerList";
 
 export default {
     name: "Room",
-    components: {TicTacToeSelectColor, NotFound404},
+    components: {PlayerList, TicTacToeSelectColor, NotFound404},
     props: ['id', 'user'],
     data() {
         return {
@@ -50,13 +46,15 @@ export default {
     },
     methods: {
         join() {
-            if (!/^#[0-9a-fA-F]{6}$/.test(this.color)) {
+            const color = this.color;
+            if (!/^#[0-9a-fA-F]{6}$/.test(color)) {
                 this.error = 'Invalid color, please, follow format #nnnnnn';
             } else {
                 axiosPatch(`/api/v1/ticTacToe/game/${this.id}/join`, {
-                    color: this.color
+                    color: color
                 }).then(() => {
                     this.game.players.push(this.user);
+                    this.game.colors.push(color);
                 }).catch(error => {
                     this.error = error.data;
                 });
@@ -139,9 +137,13 @@ export default {
 </script>
 
 <style scoped>
-.select-color-form {
-    margin: 2rem auto;
+.game-room > * {
+    margin: 0 auto 2rem;
     width: fit-content;
+}
+
+.game-room > *:last-child {
+    margin-bottom: 0;
 }
 
 .select-color-form > input {
