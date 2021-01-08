@@ -10,17 +10,21 @@
                     {{ '' }}
                 </template>
             </ColorPicker>
-            <!-- idk why just value="Less..." does not work, maybe because of caches -->
-            <input type="submit" :value="'Less colors...'"
-                   @click.prevent="confirmSwitchIndex = 0"/>
+            <button @click.prevent="confirmSwitchIndex = 0">
+                Less colors...
+            </button>
         </div>
         <div v-else class="select-color-container">
             <div class="swatches-container">
-                <span>Choose color: </span>
+                <span class="swatches-label">Choose color: </span>
                 <VSwatches v-model="color" swatches="text-advanced"/>
             </div>
-            <input type="submit" :value="switchPhrases[confirmSwitchIndex]"
-                   @click.prevent="confirmSwitchIndex += 1"/>
+            <button @click.prevent="confirmSwitchIndex += 1">
+                <span v-for="line in switchPhrases[confirmSwitchIndex].split('\n')" :key="line">
+                    {{ line }}
+                    <br>
+                </span>
+            </button>
         </div>
     </div>
 </template>
@@ -38,7 +42,7 @@ export default {
             switchPhrases: [
                 'More colors...',
                 'Seriously?',
-                'You really want to pick one of 16777216 colors?!',
+                'You really want to pick \n one of 16777216 colors?!',
                 'Confirm your craziness',
                 'I am crazy!',
                 "OK, let's go!",
@@ -81,12 +85,12 @@ export default {
     align-items: center;
 }
 
-.swatches-container span {
+.swatches-container .swatches-label {
     margin-right: 2rem;
     margin-bottom: 0.4rem;
 }
 
-.select-color-container input {
+.select-color-container button {
     width: fit-content;
     margin: 0.5rem auto;
 }

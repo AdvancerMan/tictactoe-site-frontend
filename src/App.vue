@@ -39,7 +39,7 @@ export default {
                 this.$router.push({name: 'index'});
             }).catch(error => {
                 this.$root.$emit('loginValidationError', error.data);
-            });``
+            });
         });
 
         this.$root.$on("clearJwt", () => {

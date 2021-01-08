@@ -4,6 +4,9 @@
                      @setManyColors="manyColors = $event"/>
         <img v-if="!manyColors" :src="picUrl('cross', color.slice(1))" alt="Your cross">
         <img v-if="!manyColors" :src="picUrl('circle', color.slice(1))" alt="Your circle">
+        <span v-else>
+            Preview is not available
+        </span>
     </div>
 </template>
 
@@ -49,6 +52,10 @@ export default {
 
 .ttt-select-color-root > *:last-child {
     margin-right: 0;
+}
+
+.ttt-select-color-root > span {
+    margin: auto 0;
 }
 
 .ttt-select-color-root .select-color {

@@ -25,14 +25,6 @@ export default {
     methods: {
         colorCell(index) {
             const players_cnt = this.game.players.length;
-            if (index === this.game.history.length) {
-                if (this.game.win_data.start[0] !== null) {
-                    this.game.win_data.winner = this.game.players[(index - 1) % this.game.players.length];
-                    this.winData = this.game.win_data;
-                }
-                return;
-            }
-
             const turn = this.game.history[index];
             this.$set(this.board[turn[0]], turn[1], index % players_cnt);
 
@@ -40,7 +32,14 @@ export default {
                 this.turnIndex = (index + 1) % players_cnt;
             }
 
-            setTimeout(() => this.colorCell(index + 1), 500);
+            if (index + 1 === this.game.history.length) {
+                if (this.game.win_data.start[0] !== null) {
+                    this.game.win_data.winner = this.game.players[(index - 1) % this.game.players.length];
+                    this.winData = this.game.win_data;
+                }
+            } else {
+                setTimeout(() => this.colorCell(index + 1), 500);
+            }
         },
         fillBoard() {
             for (let i = 0; i < this.game.height; i++) {

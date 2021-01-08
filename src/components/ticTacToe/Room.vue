@@ -10,12 +10,12 @@
             </ul>
             <form v-if="game.players !== undefined && user !== undefined
                         && !game.players.find(p => p.id === user.id)"
-                  @submit.prevent="join">
+                  @submit.prevent="join" class="select-color-form">
                 <TicTacToeSelectColor @setColor="color = $event"/>
                 <input type="submit" value="Join"/>
             </form>
-            <input v-else-if="user !== undefined && user.id === game.owner" @click.prevent="start"
-                   type="submit" value="Start"/>
+            <input v-else-if="user !== undefined && user.id === game.owner"
+                   @click.prevent="start" type="submit" value="Start"/>
             <div>{{ error }}</div>
         </div>
     </div>
@@ -56,7 +56,7 @@ export default {
                 axiosPatch(`/api/v1/ticTacToe/game/${this.id}/join`, {
                     color: this.color
                 }).then(() => {
-                    this.game.players.push({username: this.user.username});
+                    this.game.players.push(this.user);
                 }).catch(error => {
                     this.error = error.data;
                 });
@@ -139,8 +139,12 @@ export default {
 </script>
 
 <style scoped>
-form {
-    margin-bottom: 1rem;
+.select-color-form {
+    margin: 2rem auto;
+    width: fit-content;
+}
+
+.select-color-form > input {
     margin-top: 1rem;
 }
 </style>
