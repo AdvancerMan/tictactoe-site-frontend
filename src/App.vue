@@ -3,6 +3,7 @@
         <Header :user="user"/>
         <router-view :user="user"/>
         <Footer/>
+        <vue-snotify/>
     </div>
 </template>
 

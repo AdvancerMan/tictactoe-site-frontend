@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router, {initNavLinks} from './router/router'
 import ColorPicker from "vue-accessible-color-picker";
+import Snotify from 'vue-snotify';
 
 Vue.use(ColorPicker);
+Vue.use(Snotify)
 
 Vue.config.productionTip = false
 

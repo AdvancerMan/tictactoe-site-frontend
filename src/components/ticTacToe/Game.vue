@@ -21,7 +21,6 @@
             </div>
             <Board class='board' v-on:makeTurn="makeTurn"
                    :board="board" :colors="game.colors"/>
-            <div>{{ turnErrors }}</div>
         </div>
     </div>
 </template>
@@ -33,7 +32,7 @@ import NotFound404 from "@/components/NotFound404";
 export default {
     name: "Game",
     components: {NotFound404, Board},
-    props: ['game', 'board', 'turnIndex', 'turnErrors', 'notFound', 'winData'],
+    props: ['game', 'board', 'turnIndex', 'notFound', 'winData'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];
@@ -51,11 +50,13 @@ export default {
             this.$emit('makeTurn', i, j);
         },
         finishGame(winData) {
-            if (winData.start[0] === -1) {
-                alert(`It's a tie!`);
-            } else {
-                alert(`${winData.winner.username} won! win_data = ${JSON.stringify(winData)}`);
-            }
+            setTimeout(() => {
+                if (winData.start[0] === -1) {
+                    this.$snotify.info("It's a tie!", 'Tie');
+                } else {
+                    this.$snotify.info(`${winData.winner.username} won!`, 'Winner');
+                }
+            }, 500);
         }
     },
     watch: {

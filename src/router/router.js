@@ -113,11 +113,6 @@ router.beforeEach(function (to, from, next) {
     }
 });
 
-router.afterEach(() => {
-    NProgress.done();
-});
-
-
 function getRootNavLinks() {
     return [
         ['index', 'Home'],
@@ -147,6 +142,13 @@ router.beforeEach((to, from, next) => {
     }
 
     next();
+});
+
+router.afterEach(() => {
+    NProgress.done();
+    if (window.vue !== undefined) {
+        window.vue.$snotify.clear();
+    }
 });
 
 export default router;

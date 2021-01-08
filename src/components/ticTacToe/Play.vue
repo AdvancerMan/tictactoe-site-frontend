@@ -1,8 +1,7 @@
 <template>
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
-              :turnErrors="turnErrors" v-on:makeTurn="makeTurn"
-              :winData="winData"
+              v-on:makeTurn="makeTurn" :winData="winData"
               :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
@@ -21,7 +20,6 @@ export default {
             winData: {start: [null]},
             turnIndex: 0,
             board: [],
-            turnErrors: '',
             destroyed: false,
             fetchingGame: true,
         }
@@ -63,7 +61,7 @@ export default {
                     this.turnIndex = userIndex % this.game.players.length;
                 }
             }).catch(error => {
-                this.turnErrors = error.data;
+                this.$snotify.error(JSON.stringify(error.data), 'Error');
             });
         },
         fetchHistory() {
@@ -89,7 +87,7 @@ export default {
                     this.winData = response.data.win_data;
                 }
             }).catch(error => {
-                this.turnErrors = error.data;
+                this.$snotify.error(JSON.stringify(error.data), 'Error');
             });
         },
         fetchHistoryContinuously() {
