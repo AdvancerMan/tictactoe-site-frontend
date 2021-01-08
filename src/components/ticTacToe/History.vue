@@ -1,7 +1,7 @@
 <template>
     <div>
-        <Game :game="game" :board="board" :turnIndex="turnIndex"
-              :winData="winData" :notFound="!fetchingGame && Object.keys(game).length === 0"/>
+        <Game :game="game" :board="board" :turnIndex="turnIndex" :winData="winData"
+              :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
 

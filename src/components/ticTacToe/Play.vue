@@ -1,7 +1,7 @@
 <template>
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
-              v-on:makeTurn="makeTurn" :winData="winData"
+              v-on:makeTurn="makeTurn" :winData="winData" :highlightCells="true"
               :notFound="!fetchingGame && Object.keys(game).length === 0"/>
     </div>
 </template>
@@ -59,13 +59,14 @@ export default {
                     response.data.winner = this.user;
                     this.winData = response.data;
                     this.turnIndex = userIndex % this.game.players.length;
+                    this.fetchHistory();
                 }
             }).catch(error => {
                 this.$snotify.error(JSON.stringify(error.data), 'Error');
             });
         },
         fetchHistory() {
-            axiosGet(`/api/v1/ticTacToe/game/${this.id}/historySuffix`, {
+            return axiosGet(`/api/v1/ticTacToe/game/${this.id}/historySuffix`, {
                 params: {
                     start_index: this.game.history.length
                 }
@@ -93,8 +94,7 @@ export default {
         fetchHistoryContinuously() {
             setTimeout(() => {
                 if (this.fetchingHistory) {
-                    this.fetchHistory();
-                    this.fetchHistoryContinuously();
+                    this.fetchHistory().then(this.fetchHistoryContinuously);
                 }
             }, 1000);
         }

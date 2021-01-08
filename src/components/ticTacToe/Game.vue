@@ -20,7 +20,9 @@
                 </ul>
             </div>
             <Board class='board' v-on:makeTurn="makeTurn"
-                   :board="board" :colors="game.colors"/>
+                   :board="board" :colors="game.colors"
+                   :highlightCell="highlightCells && game.history
+                                       && game.history[game.history.length - 1]"/>
         </div>
     </div>
 </template>
@@ -32,7 +34,7 @@ import NotFound404 from "@/components/NotFound404";
 export default {
     name: "Game",
     components: {NotFound404, Board},
-    props: ['game', 'board', 'turnIndex', 'notFound', 'winData'],
+    props: ['game', 'board', 'turnIndex', 'notFound', 'winData', 'highlightCells'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];
