@@ -1,8 +1,10 @@
 <template>
     <div>
         <Game :game="game" :board="board" :turnIndex="turnIndex"
-              v-on:makeTurn="makeTurn" :winData="winData" :highlightCells="true"
-              :notFound="!fetchingGame && Object.keys(game).length === 0"/>
+              v-on:makeTurn="makeTurn" :winData="winData"
+              :notFound="!fetchingGame && Object.keys(game).length === 0"
+              :highlightCell="highlightCell || game.history
+                                  && game.history[game.history.length - 1]"/>
     </div>
 </template>
 
@@ -22,6 +24,7 @@ export default {
             board: [],
             destroyed: false,
             fetchingGame: true,
+            highlightCell: undefined,
         }
     },
     computed: {
@@ -54,6 +57,7 @@ export default {
         makeTurn(i, j) {
             axiosPatch(`/api/v1/ticTacToe/game/${this.id}/turn`, {i, j}).then(response => {
                 const userIndex = this.game.order.indexOf(this.user.id);
+                this.highlightCell = [i, j];
                 this.$set(this.board[i], j, userIndex);
                 if (!this.finished && response.data.start[0] !== null) {
                     response.data.winner = this.user;
@@ -72,6 +76,7 @@ export default {
                 }
             }).then(response => {
                 response.data.history.forEach(turn => {
+                    this.highlightCell = undefined;
                     this.$set(
                         this.board[turn[0]], turn[1],
                         this.game.history.length % this.game.players.length
@@ -79,13 +84,15 @@ export default {
                     this.game.history.push(turn);
                 });
 
-                this.turnIndex = this.game.history.length % this.game.players.length;
-
-                if (!this.finished && response.data.win_data !== undefined) {
-                    const winnerIndex = Math.max(0, this.game.history.length - 1) % this.game.players.length;
-                    this.turnIndex = winnerIndex;
-                    response.data.win_data.winner = this.game.players[winnerIndex];
+                const lastPlayerI = Math.max(0, this.game.history.length - 1) % this.game.players.length;
+                if (this.finished) {
+                    this.turnIndex = lastPlayerI;
+                } else if (response.data.win_data !== undefined) {
+                    this.turnIndex = lastPlayerI;
+                    response.data.win_data.winner = this.game.players[lastPlayerI];
                     this.winData = response.data.win_data;
+                } else {
+                    this.turnIndex = (lastPlayerI + 1) % this.game.players.length;
                 }
             }).catch(error => {
                 this.$snotify.error(JSON.stringify(error.data), 'Error');

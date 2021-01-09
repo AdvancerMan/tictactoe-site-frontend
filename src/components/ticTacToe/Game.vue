@@ -6,8 +6,7 @@
                         :highlightIndex="turnIndex"/>
             <Board class='board' v-on:makeTurn="makeTurn"
                    :board="board" :colors="game.colors"
-                   :highlightCell="highlightCells && game.history
-                                       && game.history[game.history.length - 1]"/>
+                   :highlightCell="highlightCell"/>
         </div>
     </div>
 </template>
@@ -20,7 +19,7 @@ import PlayerList from "@/components/ticTacToe/PlayerList";
 export default {
     name: "Game",
     components: {PlayerList, NotFound404, Board},
-    props: ['game', 'board', 'turnIndex', 'notFound', 'winData', 'highlightCells'],
+    props: ['game', 'board', 'turnIndex', 'notFound', 'winData', 'highlightCell'],
     computed: {
         playerMarkerStyle() {
             let colorEntries = [];

@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style scoped>
-    footer {
-        margin-top: 3rem;
-    }
+footer {
+    margin: 3rem 0;
+}
 </style>

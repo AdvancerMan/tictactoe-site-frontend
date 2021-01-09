@@ -15,7 +15,7 @@
                 :style="highlightCell && i - 1 === highlightCell[0]
                             && j - 1 === highlightCell[1]
                             && board[i - 1][j - 1] !== -1
-                            ? `background-color: ${colors[board[i - 1][j - 1]]}80;`
+                            ? `background-color: ${colors[board[i - 1][j - 1]]}50;`
                             : ''">
                 <transition name="color-cell">
                     <img :src="picPath(board[i - 1][j - 1])"

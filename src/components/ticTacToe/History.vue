@@ -34,7 +34,7 @@ export default {
 
             if (index + 1 === this.game.history.length) {
                 if (this.game.win_data.start[0] !== null) {
-                    this.game.win_data.winner = this.game.players[(index - 1) % this.game.players.length];
+                    this.game.win_data.winner = this.game.players[index % this.game.players.length];
                     this.winData = this.game.win_data;
                 }
             } else {
