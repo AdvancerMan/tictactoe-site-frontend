@@ -92,7 +92,7 @@ export default {
                     response.data.win_data.winner = this.game.players[lastPlayerI];
                     this.winData = response.data.win_data;
                 } else {
-                    this.turnIndex = (lastPlayerI + 1) % this.game.players.length;
+                    this.turnIndex = this.game.history.length % this.game.players.length;
                 }
             }).catch(error => {
                 this.$snotify.error(JSON.stringify(error.data), 'Error');

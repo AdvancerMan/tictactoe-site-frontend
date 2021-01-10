@@ -51,6 +51,9 @@ const routes = [
                 path: 'create',
                 name: 'ticTacToe-create',
                 component: TicTacToeCreate,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'games',
@@ -65,12 +68,18 @@ const routes = [
                     count: route.query.count,
                     type: route.query.type,
                 }),
+                meta: {
+                    requiresAuth: true
+                },
             },
             {
                 path: 'game/:id',
                 name: 'ticTacToe-room',
                 component: TicTacToeRoom,
                 props: true,
+                meta: {
+                    requiresAuth: true
+                }
             },
             {
                 path: 'game/:id/play',
