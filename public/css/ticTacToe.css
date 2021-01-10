@@ -14,7 +14,12 @@
     border: var(--tic-tac-toe-cell-border);
 }
 
+.tic-tac-toe-table .table-button {
+    text-decoration: none;
+    color: inherit;
+    display: table-cell;
+}
+
 .tic-tac-toe-table .table-button:hover {
     background-color: var(--tic-tac-toe-table-button-hover-color);
-    cursor: pointer;
 }

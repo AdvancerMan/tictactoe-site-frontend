@@ -29,17 +29,13 @@
                 <td>{{ game.win_threshold }}</td>
                 <td>{{ game.owner.username }}</td>
                 <td v-if="showWinner">{{ getWinner(game) }}</td>
-                <td class="table-button" @click="history(game)"
-                    v-if="game.user_joined && game.finished || !game.user_joined && game.started">
-                    <router-link :to="{name: 'ticTacToe-history', params: {id: game.id}}">
-                        History
-                    </router-link>
-                </td>
-                <td class="table-button" @click="enter(game)" v-else>
-                    <router-link :to="{name: 'ticTacToe-room', params: {id: game.id}}">
-                        Enter
-                    </router-link>
-                </td>
+                <router-link class="table-button" :to="{name: 'ticTacToe-history', params: {id: game.id}}"
+                             v-if="game.user_joined && game.finished || !game.user_joined && game.started">
+                    History
+                </router-link>
+                <router-link v-else class="table-button" :to="{name: 'ticTacToe-room', params: {id: game.id}}">
+                    Enter
+                </router-link>
             </tr>
             </tbody>
             <tbody v-else>
@@ -96,11 +92,6 @@ export default {
 
 .tic-tac-toe-table tr > * {
     padding: 0.5rem 1rem;
-}
-
-.table-button > a {
-    text-decoration: none;
-    color: inherit;
 }
 
 .game-list-buttons-root {
