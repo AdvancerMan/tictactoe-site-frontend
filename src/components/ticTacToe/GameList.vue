@@ -31,16 +31,19 @@
                 <td v-if="showWinner">{{ getWinner(game) }}</td>
                 <td class="table-button" @click="history(game)"
                     v-if="game.user_joined && game.finished || !game.user_joined && game.started">
-                    History
+                    <router-link :to="{name: 'ticTacToe-history', params: {id: game.id}}">
+                        History
+                    </router-link>
                 </td>
                 <td class="table-button" @click="enter(game)" v-else>
-                    Enter
+                    <router-link :to="{name: 'ticTacToe-room', params: {id: game.id}}">
+                        Enter
+                    </router-link>
                 </td>
             </tr>
             </tbody>
             <tbody v-else>
             <tr>
-                <td>
                 <td :colspan="showWinner ? 8 : 7">
                     <span v-if="gamesAreFetching">Fetching...</span>
                     <span v-else>No games</span>
@@ -66,12 +69,6 @@ export default {
     name: "GameList",
     props: ['games', 'showWinner', 'gamesAreFetching', 'nextPageLink', 'prevPageLink'],
     methods: {
-        enter(game) {
-            this.$router.push({name: 'ticTacToe-room', params: {id: game.id}});
-        },
-        history(game) {
-            this.$router.push({name: 'ticTacToe-history', params: {id: game.id}});
-        },
         getWinner(game) {
             if (!game.finished) {
                 return '';
@@ -99,6 +96,11 @@ export default {
 
 .tic-tac-toe-table tr > * {
     padding: 0.5rem 1rem;
+}
+
+.table-button > a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .game-list-buttons-root {

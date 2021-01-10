@@ -60,6 +60,11 @@ const routes = [
                 path: 'games/my',
                 name: 'ticTacToe-myGames',
                 component: TicTacToeMyGames,
+                props: route => ({
+                    page: route.query.page,
+                    count: route.query.count,
+                    type: route.query.type,
+                }),
             },
             {
                 path: 'game/:id',

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <GameList :games="games" :user="user" :myGames="false"/>
+        <GameList :games="games" :user="user" :myGames="false" :gamesAreFetching="initializingGames"/>
     </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
         return {
             games: [],
             destroyed: false,
+            initializingGames: true,
         };
     },
     methods: {
@@ -27,7 +28,7 @@ export default {
                 }
             }).then(response => {
                 this.games = response.data;
-            });
+            }).catch(() => {}).then(() => this.initializingGames = false);
         },
         fetchGamesContinuously() {
             this.fetchGames();
