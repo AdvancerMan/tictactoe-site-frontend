@@ -5,7 +5,7 @@
             <option value="finished">Finished</option>
             <option value="all">All</option>
         </select>
-        <GameList class="game-list" :games="games" :user="user" :myGames="true"/>
+        <GameList class="game-list" :games="games" :user="user" :showWinner="true"/>
     </div>
 </template>
 

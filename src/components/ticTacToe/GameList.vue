@@ -8,12 +8,18 @@
             <th>Height</th>
             <th>Threshold</th>
             <th>Owner</th>
+            <th v-if="showWinner">Winner</th>
             <th>Action</th>
         </tr>
         </thead>
         <tbody v-if="games.length">
         <tr v-for="game in games" :key="game.id">
-            <td>{{ new Date(game.creation_time).toLocaleString(undefined, {hour12: false}) }}</td>
+            <td>
+                {{
+                    new Date(game.creation_time)
+                        .toLocaleString(undefined, {hour12: false, timeZoneName: 'short'})
+                }}
+            </td>
             <td>
                 {{ !game.started ? 'waiting' : (game.finished ? 'finished' : 'started') }}
             </td>
@@ -21,8 +27,9 @@
             <td>{{ game.height }}</td>
             <td>{{ game.win_threshold }}</td>
             <td>{{ game.owner.username }}</td>
+            <td v-if="showWinner">{{ getWinner(game) }}</td>
             <td class="table-button" @click="history(game)"
-                v-if="myGames && game.finished || !myGames && game.started">
+                v-if="game.user_joined && game.finished || !game.user_joined && game.started">
                 History
             </td>
             <td class="table-button" @click="enter(game)" v-else>
@@ -32,7 +39,7 @@
         </tbody>
         <tbody v-else>
         <tr>
-            <td colspan="7">
+            <td :colspan="showWinner ? 8 : 7">
                 No games
             </td>
         </tr>
@@ -43,13 +50,22 @@
 <script>
 export default {
     name: "GameList",
-    props: ['games', 'myGames'],
+    props: ['games', 'showWinner'],
     methods: {
         enter(game) {
             this.$router.push({name: 'ticTacToe-room', params: {id: game.id}});
         },
         history(game) {
             this.$router.push({name: 'ticTacToe-history', params: {id: game.id}});
+        },
+        getWinner(game) {
+            if (!game.finished) {
+                return '';
+            } else if (game.winner === null) {
+                return "Tie!";
+            } else {
+                return game.winner.username;
+            }
         },
     },
 }
