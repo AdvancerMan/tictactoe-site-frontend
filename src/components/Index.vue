@@ -9,6 +9,11 @@
         or join some existing in a
         <router-link :to="{name: 'ticTacToe-lobby'}">lobby</router-link>.
 
+        When all players joined the room the creator can start the game. If you lost your game you can find it
+        <router-link :to="{name: 'ticTacToe-myGames', query: {type: 'unfinished'}}">here</router-link>
+        or
+        <router-link :to="{name: 'ticTacToe-myGames'}">here</router-link>.
+
         If you are testing this site alone, you can open it twice (in private mode or another browser) to simulate second player.
 
         Also
